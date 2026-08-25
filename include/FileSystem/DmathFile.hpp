@@ -74,7 +74,7 @@ public: //public constructors and destructors
                
                 Dmath::Vec3D vec3d = this->content[i].get<Dmath::Vec3D>(); 
                
-                data += Dmath::fileVector3D(objName, vec3d);
+                data += fileVector3D(objName, vec3d);
                 
                 continue;
             }
@@ -114,6 +114,11 @@ public: //public constructors and destructors
 
     
 public:
+
+
+    Dmath::FreeMap<std::string>& getElements() {
+        return this->content;
+    }
 
     void saveDmathFile(){
         if(writeFile(this->src,this->getDmathString())){
@@ -247,7 +252,7 @@ public:
       
         for(size_t i = 0; i < num; i++){
             
-            Dmath::ObjDef currentTypeData = Dmath::getTypeData(lines[i]);
+            Dmath::ObjDef currentTypeData = getTypeData(lines[i]);
 
             if(currentTypeData.one == "Vector2D"){
                 Dmath::Vec2D vec = Dmath::getFromFileVec(currentTypeData);

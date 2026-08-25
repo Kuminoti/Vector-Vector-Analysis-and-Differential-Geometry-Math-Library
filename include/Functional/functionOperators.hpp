@@ -5,74 +5,115 @@
 
 #include"../Text/chars.hpp"
 #include"vectorfunction.hpp"
+#include"../Types/StringHelper.hpp"
 
 
 NAMESPACESTART
 
 #pragma region SingleVarOperators
 
-Dmath::SingleVarFunction operator*(std::string op, Dmath::SingleVarFunction& func){
-	Dmath::SingleVarFunction f([](Dmath::Scalar x){ return Dmath::NaN;}, "NaN");
+Dmath::SingleVarFunction operator*(const char* op,const Dmath::SingleVarFunction& func) {
+    Dmath::StringHelper strH;
+    std::string operation(op);
 
-    //Analytical operators
+    // Numeric operator: "3" * f
+    if(strH.isNumeric(operation)){
+        return func * std::stod(operation);
+    }
 
-	if(op == Dmath::SpecialChars.getFromKey("nabla")      ||
-       op == Dmath::SpecialCHars.getFromKey("derivative") ||
-       op == Dmath::SpecialChars.getFromKey("partial")    ){
+    // Derivative
+    if(operation == Dmath::SpecialChars.getFromKey("nabla") ||
+       operation == Dmath::SpecialChars.getFromKey("derivative") ||
+       operation == Dmath::SpecialChars.getFromKey("partial")){
 
-        //partial und nabla operators are simple derivatives in 1D
-		f = func.getDerivative();
-		f.setFuncData(
-		"d/dx(" + func.getFunctionData() +
-		")");
-	}
+        Dmath::SingleVarFunction f = func.getDerivative();
 
-	if(op == Dmath::SpecialChars.getFromKey("integral")){
-		f = func.getAntiDerivative();
+        f.setFuncData(
+            "d/dx(" + func.getFunctionData() + ")"
+        );
 
-		f.setFuncData(
+        return f;
+    }
+
+    // Integral
+    if(operation == Dmath::SpecialChars.getFromKey("integral")){
+
+        Dmath::SingleVarFunction f = func.getAntiDerivative();
+
+        f.setFuncData(
             Dmath::SpecialChars.getFromKey("integral") +
-		    "(" + func.getFunctionData() + ")"
-	    );
+            "(" + func.getFunctionData() + ")"
+        );
 
-	}
+        return f;
+    }
 
+    // sqrt
+    if(operation == Dmath::SpecialChars.getFromKey("sqrt")){
 
-
-    //numeric operators
-    if(op == Dmath::SpecialChars.getFromKey("sqrt")){
-        Dmath::SingleVarFunction g(
-            [func](Dmath::Scalar) ->Dmath::Scalar {
+        return Dmath::SingleVarFunction(
+            [func](Dmath::Scalar x) -> Dmath::Scalar {
                 return std::sqrt(func(x));
-            }
-            ,Dmath::SpecialChars.getFromKey("sqrt") + "(" + func.getFunctionData() + ")" );
-
-            f = g;
+            },
+            Dmath::SpecialChars.getFromKey("sqrt") +
+            "(" + func.getFunctionData() + ")"
+        );
     }
 
+    // cbrt
+    if(operation == Dmath::SpecialChars.getFromKey("cbrt")){
 
-    if(op == Dmath::SpecialChars.getFromKey("cbrt")){
-        Dmath::SingleVarFunction g(
-            [func](Dmath::Scalar) ->Dmath::Scalar {
+        return Dmath::SingleVarFunction(
+            [func](Dmath::Scalar x) -> Dmath::Scalar {
                 return std::cbrt(func(x));
-            }
-            ,Dmath::SpecialChars.getFromKey("cbrt") + "(" + func.getFunctionData() + ")" );
-
-            f = g;
+            },
+            Dmath::SpecialChars.getFromKey("cbrt") +
+            "(" + func.getFunctionData() + ")"
+        );
     }
 
-    if(op == Dmath::SpecialChars.getFromKey("fourthRoot")){
-        Dmath::SingleVarFunction g(
-            [func](Dmath::Scalar) ->Dmath::Scalar {
-                return std::pow(func(x), 1.0f/4.0f);
-            }
-            ,Dmath::SpecialChars.getFromKey("fourthRoot") + "(" + func.getFunctionData() + ")" );
+    // fourth root
+    if(operation == Dmath::SpecialChars.getFromKey("fourthRoot")){
 
-            f = g;
+        return Dmath::SingleVarFunction(
+            [func](Dmath::Scalar x) -> Dmath::Scalar {
+                return std::pow(func(x), 1.0 / 4.0);
+            },
+            Dmath::SpecialChars.getFromKey("fourthRoot") +
+            "(" + func.getFunctionData() + ")"
+        );
     }
-	
-	return f;
+
+    throw std::invalid_argument(
+        "Unknown function operator: " + operation
+    );
 }
+
+
+
+template<typename Dmath_type>
+Dmath::SingleVectorFunction operator*(const Dmath_type& data, const Dmath::SingleVectorFunction& func) {
+
+    
+    if constexpr(std::is_same<Dmath_type, std::string>::value) {
+
+        if(data == Dmath::SpecialChars.getFromKey("nabla")) {
+
+            return Dmath::SingleVectorFunction(
+                func.getXFunc().getDerivative(),
+                func.getYFunc().getDerivative(),
+                func.getZFunc().getDerivative()
+            );
+        }
+    }
+
+
+    throw std::invalid_argument(
+        "Invalid operator for SingleVectorFunction"
+    );
+}
+
+
 
 
     #pragma endregion

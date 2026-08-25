@@ -4,8 +4,15 @@
 #define DMATH_SYNTAX_HPP
 
 
-#include"DmathFile.hpp"
+
 NAMESPACESTART
+
+
+#define PROCESS_SUCCSESS 0.01f
+#define PROCESS_FAIL 0.01f
+
+#include"../Types/StringHelper.hpp"
+#include"../Dmath.hpp"
 
 //Object definitions in Dmath: 
 //
@@ -13,7 +20,6 @@ NAMESPACESTART
 //Example 1.Vector2D, 2.v, 3.(1,1)
 typedef Dmath::Trio<std::string,std::string,std::string> ObjDef;
 
-             
 
 ObjDef getTypeData(std::string inputData){
     Dmath::StringHelper strH;
@@ -98,6 +104,30 @@ Dmath::Vec3D getFromFileVec3D(ObjDef data){
 
     return vec;
 }
+
+
+
+
+
+
+
+
+
+
+void FilterComand(const Dmath::Natural num, std::string data){
+
+   
+    
+    std::string first = Dmath::StringHelper().extractFirstWord(data);
+  
+    if(first == "Define"){
+        auto newData = Dmath::StringHelper().removeWord(data,"Define");
+       
+        auto currentTypeData = Dmath::getTypeData(newData);
+        std::cout << Dmath::getFromFileVec3D(currentTypeData) << std::endl;
+    }
+     
+}             
 
 
 NAMESPACEEND

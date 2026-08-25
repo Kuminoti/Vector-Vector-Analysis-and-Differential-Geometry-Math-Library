@@ -406,6 +406,98 @@ Dmath::Duo<std::string, std::string> Dmath::StringHelper::splitString(std::strin
 }
 
 
+size_t Dmath::StringHelper::countWords(const std::string& input) {
+    size_t count = 0;
+    bool inWord = false;
+
+    const std::string separators =
+        " \t\n\r.,!?\"',;:-_()[]{}";
+        
+
+    for(char c : input) {
+        if(separators.find(c) != std::string::npos) {
+            inWord = false;
+        }
+        else {
+            if(!inWord) {
+                ++count;
+                inWord = true;
+            }
+        }
+    }
+
+    return count;
+}
+
+
+std::string Dmath::StringHelper::removeWord(
+    const std::string& input,
+    const std::string& word
+) {
+    if(word.empty() || input.empty()) {
+        return input;
+    }
+
+    const std::string separators =
+        " \t\n\r.,!?\"',;:-_()[]{}=";
+
+    std::string result;
+    size_t i = 0;
+
+    while(i < input.size()) {
+
+        if(input.compare(i, word.size(), word) == 0) {
+
+            bool validStart =
+                i == 0 ||
+                separators.find(input[i - 1]) != std::string::npos;
+
+            bool validEnd =
+                i + word.size() == input.size() ||
+                separators.find(input[i + word.size()]) != std::string::npos;
+
+            if(validStart && validEnd) {
+
+                size_t start = i;
+                size_t end = i + word.size();
+
+                // Leerzeichen direkt nach dem Wort entfernen
+                while(
+                    end < input.size() &&
+                    (input[end] == ' ' ||
+                     input[end] == '\t')
+                ) {
+                    ++end;
+                }
+
+                // Wenn das Wort am Satzanfang steht und danach
+                // ein Satzzeichen kommt, Satzzeichen behalten.
+                if(
+                    end < input.size() &&
+                    (input[end] == '.' ||
+                     input[end] == ',' ||
+                     input[end] == '!' ||
+                     input[end] == '?' ||
+                     input[end] == ';' ||
+                     input[end] == ':')
+                ) {
+                    result += input[end];
+                    ++end;
+                }
+
+                i = end;
+                continue;
+            }
+        }
+
+        result += input[i];
+        ++i;
+    }
+
+    return result;
+}
+
+
 std::string  Dmath::StringHelper::getFileExtension(const std::string& filename) {
     size_t pos = filename.rfind('.');
     if (pos == std::string::npos || pos == filename.length() - 1) {

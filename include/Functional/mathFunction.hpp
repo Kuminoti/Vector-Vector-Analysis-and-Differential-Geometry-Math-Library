@@ -189,10 +189,21 @@ public:
 
 class SHARED_LIB Function{
 
-private: // Private members:
+  private: // Private members:
     std::shared_ptr<FunctionBase> funcBase;
 
-public: 
+  public: //public members
+
+    static inline const constexpr Dmath::Scalar FUNCTION__SUCCESS = 0.69; // nice
+    static inline const constexpr Dmath::Scalar FUNCTION__WARN = 0.01;
+    static inline const constexpr Dmath::Scalar FUNCTION__FATAL = Dmath::NaN;
+
+
+
+
+
+
+  public:
 
     Function& operator=(const Function& other){
         if (this != &other) {
@@ -421,11 +432,11 @@ public: //Public constructors
 
 
     //returns the first and second derivative as a function object 
-    SingleVarFunction getDerivative();
-    SingleVarFunction getSecondDerivative();
-    SingleVarFunction getAntiDerivative();
+    SingleVarFunction getDerivative() const;
+    SingleVarFunction getSecondDerivative() const;
+    SingleVarFunction getAntiDerivative() const;
 
-    SingleVarFunction getNthDerivative(Dmath::Natural order);
+    SingleVarFunction getNthDerivative(Dmath::Natural order) const;
 
 
 

@@ -462,7 +462,7 @@ Dmath::Scalar Dmath::SingleVarFunction::getAntiDerivativeAt(Dmath::Scalar x) {
 
 
 
-Dmath::SingleVarFunction Dmath::SingleVarFunction::getDerivative(){
+Dmath::SingleVarFunction Dmath::SingleVarFunction::getDerivative() const {
     return Dmath::SingleVarFunction([=](double x) {
             double plusDX  = funcBase->Callx(x + dx);
             double minusDX = funcBase->Callx(x - dx);
@@ -471,7 +471,7 @@ Dmath::SingleVarFunction Dmath::SingleVarFunction::getDerivative(){
 
 }
 
-Dmath::SingleVarFunction Dmath::SingleVarFunction::getSecondDerivative(){
+Dmath::SingleVarFunction Dmath::SingleVarFunction::getSecondDerivative() const {
     return Dmath::SingleVarFunction([=](double x){
         const Dmath::Scalar TwofOfX = 2 * this->funcBase->Callx(x);
         const Dmath::Scalar plusDX  = this->funcBase->Callx(x+this->dx);
@@ -483,7 +483,7 @@ Dmath::SingleVarFunction Dmath::SingleVarFunction::getSecondDerivative(){
 }
 
 
-Dmath::SingleVarFunction Dmath::SingleVarFunction::getNthDerivative(Dmath::Natural order){
+Dmath::SingleVarFunction Dmath::SingleVarFunction::getNthDerivative(Dmath::Natural order) const {
     //Since higher orders then 3 are unusal in classical analysis and can be problematic in the code there is a warning 
         if(order > 3) { 
             std::cout << "Warning higher orders then 3 can give false or problematic results " << std::endl;
@@ -497,7 +497,7 @@ Dmath::SingleVarFunction Dmath::SingleVarFunction::getNthDerivative(Dmath::Natur
         return result;
     }
 
-Dmath::SingleVarFunction Dmath::SingleVarFunction::getAntiDerivative() {
+Dmath::SingleVarFunction Dmath::SingleVarFunction::getAntiDerivative() const {
 
     return Dmath::SingleVarFunction([=](double x) {
 

@@ -50,6 +50,7 @@ class DFStraem{
     }
 
 
+
     
 std::string textToBitString(const std::string& text){
         std::string bits;

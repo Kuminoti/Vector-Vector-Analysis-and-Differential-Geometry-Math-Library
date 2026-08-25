@@ -7,9 +7,10 @@
 #include"mathFunction.hpp"
 #include"mathmaticalCondition.hpp"
 #include"vectorfunction.hpp"
-#include"EquationsTemplate.hpp"
+#include"FunctionBuilder.hpp"
 #include"algorithmic.hpp"
 #include"Equation.hpp"
+#include"functionOperators.hpp"
 
 
 #endif //DMATH_FUNCTIONAL_HPP

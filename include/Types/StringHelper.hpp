@@ -33,7 +33,11 @@ class  StringHelper{
 
     Dmath::Duo<std::string, std::string> splitString(std::string mainString, size_t position);
 
+    //number of words in a string: ( " ", "," ".","!","?",";",":","_","-" ) seperate a word
+    size_t countWords(const std::string& input);
 
+
+    std::string removeWord(const std::string& input, const std::string& word); 
 
   public: //Extractors
     //Extracts between two specific chars: ( "ILovehotMoms", I,h) => Love 

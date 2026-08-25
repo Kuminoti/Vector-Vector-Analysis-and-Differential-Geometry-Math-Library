@@ -149,6 +149,21 @@ public:
         }
     }
 
+
+    typeOne getKeyFromIndex(Dmath::Natural index){
+        if(index > this->size()){
+            std::cerr <<"Boundry-Error Dmath::MapDtypeOne getKeyFromIndex(Dmath::Natural index) :" << std::endl
+                      << "Index out ouf bounce size = " << this->size() << std::endl
+                      << "but got: " << index << std::endl 
+                      << "Dmath::Error-code: " << Dmath::ERROR_CODE::OUT_OF_RANGE << std::endl;
+
+            throw std::runtime_error("Dmath Range Error");
+        }
+        return this->operator[](index).one;
+    }
+
+
+
     bool containsKey(typeOne key) const {
         for (const auto& duo : mapVec) {
             if (duo.one == key) return true;
